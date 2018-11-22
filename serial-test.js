@@ -151,7 +151,7 @@ if (options.list) {
       for (const match of matches) {
         console.log('Port', match.port.comName,
                     'looks like', match.prober.param.name);
-        match.prober.close();
+        match.serialPort.close();
       }
     }
   });

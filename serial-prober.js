@@ -33,34 +33,29 @@ class SerialProber {
     DEBUG && console.log('SerialProber: Probing', portName,
                          'at', this.param.baudRate,
                          'for', this.param.name);
-    this.portName = portName;
     this.lockAttempt = 0;
     return new Promise((resolve, reject) => {
-      this.tryToOpen(resolve, reject);
-    }).catch((err) => {
-      this.close();
-      // rethrow the error so that the next .catch will pick it up.
-      throw err;
+      this.tryToOpen(portName, resolve, reject);
     });
   }
 
-  tryToOpen(resolve, reject) {
-    DEBUG && console.log('SerialProber: Opening', this.portName,
+  tryToOpen(portName, resolve, reject) {
+    DEBUG && console.log('SerialProber: Opening', portName,
                          'at', this.param.baudRate, 'baud');
-    this.serialPort = new SerialPort(this.portName, {
+    const serialPort = new SerialPort(portName, {
       baudRate: this.param.baudRate,
       lock: true,
     }, (err) => {
       if (err) {
         if (err.message.includes('Cannot lock port')) {
-          DEBUG && console.log(`SerialProber: ${this.portName} locked.`);
+          DEBUG && console.log(`SerialProber: ${portName} locked.`);
           this.lockAttempt++;
           if (this.lockAttempt >= MAX_OPEN_ATTEMPTS) {
             // Looks like somebody else has the port open.
             reject(err);
           } else {
             this.lockTimer = setTimeout(() => {
-              this.tryToOpen(resolve, reject);
+              this.tryToOpen(portName, resolve, reject);
             }, 1000);
           }
         } else {
@@ -69,23 +64,14 @@ class SerialProber {
         }
         return;
       }
-      DEBUG && console.log(`SerialProber: Probing ${this.portName} ...`);
-      this.probe().then(() => {
+      DEBUG && console.log(`SerialProber: Probing ${portName} ...`);
+      this.probe(serialPort, portName).then(() => {
         DEBUG && console.log('SerialProber: Probe successful');
-        resolve(this.serialPort);
+        resolve(serialPort);
       }).catch((err) => {
         reject(err);
       });
     });
-  }
-
-  close() {
-    if (this.serialPort && this.serialPort.isOpen) {
-      DEBUG && console.log(`SerialProber: closing ${this.portName}`);
-      this.serialPort.close();
-      this.serialPort = null;
-      this.portName = null;
-    }
   }
 
   // Does the actual probe, returning a promise which resolves if the probe
@@ -96,30 +82,36 @@ class SerialProber {
   //
   // This function could be overridden by a derived class if a more exotic
   // probe function is needed.
-  probe() {
+  probe(serialPort, portName) {
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
+        DEBUG && console.log(`SerialProber: closing ${portName}`);
+        serialPort.close();
         const msg = `SerialProber: timeout: ${this.param.name} ` +
-                    `dongle not detected on ${this.portName}`;
+                    `dongle not detected on ${portName}`;
         DEBUG && console.log(msg);
         reject(msg);
       }, 500);
 
       const match = Buffer.from(this.param.probeRsp);
       let data = Buffer.from([]);
-      this.serialPort.on('data', (chunk) => {
+      serialPort.on('data', (chunk) => {
         DEBUG && console.log('SerialProber: Rcvd:', chunk);
         data = Buffer.concat([data, chunk]);
         if (data.includes(match)) {
           clearTimeout(timer);
-          resolve();
+          // Remove the on data we registered above.
+          serialPort.removeAllListeners();
+          // We clear these fields since we're done with this
+          // serial port.
+          resolve(serialPort);
         }
       });
 
       // Send out the probe command
       const probeCmd = Buffer.from(this.param.probeCmd);
       DEBUG && console.log('SerialProber: Sent:', probeCmd);
-      this.serialPort.write(probeCmd);
+      serialPort.write(probeCmd);
     });
   }
 
