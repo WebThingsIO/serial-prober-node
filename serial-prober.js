@@ -30,7 +30,7 @@ class SerialProber {
   // Returns a promise which resolves to the opened serial port
   // object.
   open(portName) {
-    DEBUG && console.log('Probing', portName,
+    DEBUG && console.log('SerialProber: Probing', portName,
                          'at', this.param.baudRate,
                          'for', this.param.name);
     this.portName = portName;
@@ -135,7 +135,7 @@ class SerialProber {
   //
   // Returns a promise which resolves to an array of open serial port
   // objects.
-  async probeAll() {
+  static async probeAll(probers) {
     const serialPorts = [];
     const ports = await SerialPort.list();
     for (const port of ports) {
@@ -146,17 +146,24 @@ class SerialProber {
       if (port.comName.startsWith('/dev/tty.usb')) {
         port.comName = port.comName.replace('/dev/tty', '/dev/cu');
       }
-      if (this.serialPortMatchesFilter(port)) {
-        try {
-          const serialPort = await this.open(port.comName);
-          // probe passed.
-          serialPorts.push({
-            prober: this,
-            port: port,
-            serialPort: serialPort,
-          });
-        } catch (err) {
-          // probe failed.
+      for (const prober of probers) {
+        if (prober.serialPortMatchesFilter(port)) {
+          try {
+            const serialPort = await prober.open(port.comName);
+            // probe passed.
+            serialPorts.push({
+              prober: prober,
+              port: port,
+              serialPort: serialPort,
+            });
+            break;  // probe succeeded.
+          } catch (err) {
+            // probe failed.
+          }
+        } else {
+          DEBUG && console.log('SerialProber:', port.comName,
+                               'filter for', prober.param.name,
+                               'didn\'t match.');
         }
       }
     }

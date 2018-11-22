@@ -106,14 +106,6 @@ async function probePort(portName) {
   }
 }
 
-async function probeAllPorts() {
-  let matches = [];
-  for (const prober of PROBERS) {
-    matches = matches.concat(await prober.probeAll());
-  }
-  return matches;
-}
-
 const optionsDefs = [
   {name: 'debug', alias: 'd', type: Boolean, defaultValue: false},
   {name: 'list', alias: 'l', type: Boolean},
@@ -152,7 +144,7 @@ if (options.list) {
     console.log('Done all probes - nothing matched');
   });
 } else {
-  probeAllPorts().then((matches) => {
+  SerialProber.probeAll(PROBERS).then((matches) => {
     if (matches.length == 0) {
       console.log('Nothhing found');
     } else {
