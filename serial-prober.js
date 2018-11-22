@@ -193,6 +193,21 @@ class SerialProber {
     }
     return false;
   }
+
+  static listAll() {
+    console.log('Serial ports that were found:');
+    return cSerialPort.list().then((ports) => {
+      for (const port of ports) {
+        if (port.vendorId) {
+          const vidPid = `${port.vendorId}:${port.productId}`;
+          console.log('USB Serial Device', vidPid + extraInfo(port),
+                      'found @', port.comName);
+        } else {
+          console.log('Serial Device found @', port.comName);
+        }
+      }
+    });
+  }
 }
 
 module.exports = SerialProber;
