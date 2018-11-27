@@ -195,7 +195,7 @@ class SerialProber {
 
   static listAll() {
     console.log('Serial ports that were found:');
-    return cSerialPort.list().then((ports) => {
+    return SerialPort.list().then((ports) => {
       for (const port of ports) {
         if (port.vendorId) {
           const vidPid = `${port.vendorId}:${port.productId}`;
