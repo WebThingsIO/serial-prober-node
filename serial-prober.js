@@ -193,13 +193,25 @@ class SerialProber {
     return false;
   }
 
+  static extraInfo(port) {
+    let output = '';
+    if (port.manufacturer) {
+      output += ` Vendor: ${port.manufacturer}`;
+    }
+    if (port.serialNumber) {
+      output += ` Serial: ${port.serialNumber}`;
+    }
+    return output;
+  }
+
   static listAll() {
     console.log('Serial ports that were found:');
     return SerialPort.list().then((ports) => {
       for (const port of ports) {
         if (port.vendorId) {
           const vidPid = `${port.vendorId}:${port.productId}`;
-          console.log('USB Serial Device', vidPid + extraInfo(port),
+          console.log('USB Serial Device',
+                      vidPid + SerialProber.extraInfo(port),
                       'found @', port.comName);
         } else {
           console.log('Serial Device found @', port.comName);
