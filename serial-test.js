@@ -11,20 +11,7 @@
 'use strict';
 
 const commandLineArgs = require('command-line-args');
-const SerialPort = require('serialport');
 const SerialProber = require('./serial-prober');
-
-function extraInfo(port) {
-  let output = '';
-  if (port.manufacturer) {
-    output += ` Vendor: ${port.manufacturer}`;
-  }
-  if (port.serialNumber) {
-    output += ` Serial: ${port.serialNumber}`;
-  }
-  return output;
-}
-
 
 const PROBERS = [
   new SerialProber({
@@ -116,16 +103,8 @@ const options = commandLineArgs(optionsDefs);
 SerialProber.debug(options.debug);
 
 if (options.list) {
-  SerialPort.list().then((ports) => {
-    for (const port of ports) {
-      if (port.vendorId) {
-        const vidPid = `${port.vendorId}:${port.productId}`;
-        console.log('USB Serial Device', vidPid + extraInfo(port),
-                    'found @', port.comName);
-      } else {
-        console.log('Serial Device found @', port.comName);
-      }
-    }
+  SerialProber.listAll().then(() => {
+    console.log('End of serial port list');
   }).catch((err) => {
     console.log('Error:', err);
   });
@@ -146,7 +125,7 @@ if (options.list) {
 } else {
   SerialProber.probeAll(PROBERS).then((matches) => {
     if (matches.length == 0) {
-      console.log('Nothhing found');
+      console.log('Nothing found');
     } else {
       for (const match of matches) {
         console.log('Port', match.port.comName,
