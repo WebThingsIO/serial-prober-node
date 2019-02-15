@@ -39,8 +39,8 @@ const PROBERS = [
     ],
     filter: [
       {
-        vendorId: '0403',
-        productId: '6015',
+        vendorId: /0403/i,
+        productId: /6015/i,
       },
     ],
   }),
@@ -74,8 +74,8 @@ const PROBERS = [
         // Devices like the UartSBee, use a generic FTDI chip and with
         // an XBee S2 programmed with the right firmware can act like
         // a Zigbee coordinator.
-        vendorId: '0403',
-        productId: '6001',
+        vendorId: /0403/i,
+        productId: /6001/i,
       },
     ],
   }),
