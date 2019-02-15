@@ -25,7 +25,7 @@ const PROBERS = [
       0x00,       // Reserved - set to zero
       0x05, 0x00, // Frame length
       0xed, 0xff, // CRC
-      0xc0        // END - SLIP framing
+      0xc0,       // END - SLIP framing
     ],
     probeRsp: [
       0xc0,       // END - SLIP framing
@@ -54,14 +54,14 @@ const PROBERS = [
       0x08,       // AT Command Request
       0x01,       // Frame ID
       0x41, 0x50, // AP - API Enable
-      0x65        // Checksum
+      0x65,       // Checksum
     ],
     probeRsp: [
       0x7e,       // Start of frame
       0x00, 0x06, // Payload length
       0x88,       // AT Command Response
       0x01,       // Frame ID
-      0x41, 0x50  // AP
+      0x41, 0x50, // AP
       // This would normally be followed by the current API mode, and a
       // checksum, but since we don't know those will be, we only match on
       // the first part of the response.
