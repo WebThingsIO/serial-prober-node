@@ -26,7 +26,6 @@
   "devDependencies": {
     "babel-eslint": "^10.0.1",
     "command-line-args": "^5.0.2",
-    "eslint": "^5.13.0",
-    "eslint-plugin-html": "^5.0.3"
+    "eslint": "^5.13.0"
   }
 }
