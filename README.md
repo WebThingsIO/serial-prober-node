@@ -11,8 +11,8 @@ passing in a parameters object which contains the following keys:
   probeRsp: [0xx0, 0d0d], // expected response
   filter: [               // array of filter objects
     {
-      vendorId: '0403',
-      productId: '6015',
+      vendorId: /0403/i,
+      productId: /6015/i,
     },
   ],
 }
@@ -26,7 +26,7 @@ and the probeCmd will be sent. If the probeRsp is received back
 within 500 msec then the probe will have passed.
 
 The `probeAll` method will return a promise containing an array
-of opened serial port which passed the filter and passed the
+of opened serial ports which passed the filter and passed the
 probe.
 
 See the serial-test.js test program for an example which will
