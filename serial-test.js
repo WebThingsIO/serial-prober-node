@@ -133,5 +133,8 @@ if (options.list) {
         match.serialPort.close();
       }
     }
+  }).catch((err) => {
+    console.error('' + err);
+    console.log('Done all probes - nothing matched');
   });
 }
