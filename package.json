@@ -1,6 +1,6 @@
 {
   "name": "serial-prober",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Probes a serial port to determine the type of device attached.",
   "main": "serial-prober.js",
   "scripts": {
