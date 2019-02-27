@@ -154,8 +154,6 @@ class SerialProber {
             const msg = `Port ${port.comName} ` +
                         `looks like it might be a/an ${prober.param.name} ` +
                         `dongle, but it couldn't be opened.`;
-            console.error(msg);
-            console.error(err);
             throw new Error(`${msg} ${err}`);
           }
         } else {
