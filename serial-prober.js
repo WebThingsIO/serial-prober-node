@@ -151,6 +151,10 @@ class SerialProber {
             break;  // probe succeeded.
           } catch (err) {
             // probe failed.
+            console.log('Port', port.comName,
+                        'looks like it might be a/an:', prober.param.name,
+                        'dongle, but couldn\'t be opened');
+            console.log(err);
           }
         } else {
           DEBUG && console.log('SerialProber:', port.comName,
