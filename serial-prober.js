@@ -52,6 +52,7 @@ class SerialProber {
           this.lockAttempt++;
           if (this.lockAttempt >= MAX_OPEN_ATTEMPTS) {
             // Looks like somebody else has the port open.
+            DEBUG && console.error(err);
             reject(err);
           } else {
             this.lockTimer = setTimeout(() => {
@@ -60,6 +61,7 @@ class SerialProber {
           }
         } else {
           // Some other error (like access denied, etc.)
+          DEBUG && console.error(err);
           reject(err);
         }
         return;
@@ -151,10 +153,8 @@ class SerialProber {
             break;  // probe succeeded.
           } catch (err) {
             // probe failed.
-            const msg = `Port ${port.comName} ` +
-                        `looks like it might be a/an ${prober.param.name} ` +
-                        `dongle, but it couldn't be opened.`;
-            throw new Error(`${msg} ${err}`);
+            console.error(err);
+            // keep going since there are other ports to check.
           }
         } else {
           DEBUG && console.log('SerialProber:', port.comName,
@@ -177,7 +177,7 @@ class SerialProber {
     for (const filter of this.param.filter) {
       let match = true;
       for (const [key, re] of Object.entries(filter)) {
-        if (!port.hasOwnProperty(key)) {
+        if (!Object.prototype.hasOwnProperty.call(port, key)) {
           match = false;
           break;
         }

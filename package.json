@@ -1,6 +1,6 @@
 {
   "name": "serial-prober",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Probes a serial port to determine the type of device attached.",
   "main": "serial-prober.js",
   "scripts": {
@@ -24,8 +24,8 @@
     "serialport": "^7.0.2"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.1",
-    "command-line-args": "^5.0.2",
-    "eslint": "^5.13.0"
+    "babel-eslint": "^10.0.2",
+    "command-line-args": "^5.1.1",
+    "eslint": "^6.0.1"
   }
 }
