@@ -42,6 +42,10 @@ const PROBERS = [
         vendorId: /0403/i,
         productId: /6015/i,
       },
+      {
+        vendorId: /1cf1/i,
+        productId: /0030/i,
+      },
     ],
   }),
   new SerialProber({
@@ -134,7 +138,7 @@ if (options.list) {
       }
     }
   }).catch((err) => {
-    console.error('' + err);
+    console.error(`${err}`);
     console.log('Done all probes - nothing matched');
   });
 }
