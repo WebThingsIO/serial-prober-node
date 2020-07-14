@@ -1,6 +1,6 @@
 {
   "name": "serial-prober",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Probes a serial port to determine the type of device attached.",
   "main": "serial-prober.js",
   "scripts": {
@@ -21,11 +21,11 @@
   },
   "homepage": "https://github.com/mozilla-iot/serial-prober-node#readme",
   "dependencies": {
-    "serialport": "^7.1.5"
+    "serialport": "^8.0.8"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.3",
+    "babel-eslint": "^10.1.0",
     "command-line-args": "^5.1.1",
-    "eslint": "^6.2.2"
+    "eslint": "^7.4.0"
   }
 }
