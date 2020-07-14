@@ -137,13 +137,13 @@ class SerialProber {
       // /dev/cu.usbXXX. tty.usbXXX requires DCD to be asserted which
       // isn't necessarily the case for all serial dongles. The cu.usbXXX
       // doesn't care about DCD.
-      if (port.comName.startsWith('/dev/tty.usb')) {
-        port.comName = port.comName.replace('/dev/tty', '/dev/cu');
+      if (port.path.startsWith('/dev/tty.usb')) {
+        port.path = port.path.replace('/dev/tty', '/dev/cu');
       }
       for (const prober of probers) {
         if (prober.serialPortMatchesFilter(port)) {
           try {
-            const serialPort = await prober.open(port.comName);
+            const serialPort = await prober.open(port.path);
             // probe passed.
             serialPorts.push({
               prober: prober,
@@ -157,7 +157,7 @@ class SerialProber {
             // keep going since there are other ports to check.
           }
         } else {
-          DEBUG && console.log('SerialProber:', port.comName,
+          DEBUG && console.log('SerialProber:', port.path,
                                'filter for', prober.param.name,
                                'didn\'t match.');
         }
@@ -171,8 +171,8 @@ class SerialProber {
     // /dev/cu.usbXXX. tty.usbXXX requires DCD to be asserted which
     // isn't necessarily the case for usb-to-serial dongles.
     // The cu.usbXXX doesn't care about DCD.
-    if (port.comName.startsWith('/dev/tty.usb')) {
-      port.comName = port.comName.replace('/dev/tty', '/dev/cu');
+    if (port.path.startsWith('/dev/tty.usb')) {
+      port.path = port.path.replace('/dev/tty', '/dev/cu');
     }
     for (const filter of this.param.filter) {
       let match = true;
@@ -216,9 +216,9 @@ class SerialProber {
           const vidPid = `${port.vendorId}:${port.productId}`;
           console.log('USB Serial Device',
                       vidPid + SerialProber.extraInfo(port),
-                      'found @', port.comName);
+                      'found @', port.path);
         } else {
-          console.log('Serial Device found @', port.comName);
+          console.log('Serial Device found @', port.path);
         }
       }
     });

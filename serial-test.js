@@ -132,7 +132,7 @@ if (options.list) {
       console.log('Nothing found');
     } else {
       for (const match of matches) {
-        console.log('Port', match.port.comName,
+        console.log('Port', match.port.path,
                     'looks like', match.prober.param.name);
         match.serialPort.close();
       }
