@@ -174,6 +174,10 @@ class SerialProber {
     if (port.path.startsWith('/dev/tty.usb')) {
       port.path = port.path.replace('/dev/tty', '/dev/cu');
     }
+    if (this.param.allowRPIAMASerial && port.path.startsWith('/dev/ttyAMA')) {
+      DEBUG && console.log('SerialProber: allowRPIAMASerial');
+      return true;
+    }
     for (const filter of this.param.filter) {
       let match = true;
       for (const [key, re] of Object.entries(filter)) {
