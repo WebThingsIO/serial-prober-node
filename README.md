@@ -7,6 +7,7 @@ passing in a parameters object which contains the following keys:
 {
   name: 'name of prober',
   baudRate: 9600, // baud rate used to talk to device in question
+  allowAMASerial : false, // to enable use of AMA serial port
   probeCmd: [0xc0, 0x0d], // array of bytes to send as a probe
   probeRsp: [0xx0, 0d0d], // expected response
   filter: [               // array of filter objects
